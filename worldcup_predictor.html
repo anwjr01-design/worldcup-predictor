@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>2026 월드컵 한국 예측</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; min-height: 100vh; padding: 1.5rem 1rem; }
+  .app { max-width: 480px; margin: 0 auto; }
+
+  .header { text-align: center; margin-bottom: 1.5rem; }
+  .header h1 { font-size: 22px; font-weight: 600; color: #111; }
+  .header p { font-size: 14px; color: #888; margin-top: 4px; }
+
+  .tab-bar { display: flex; gap: 8px; margin-bottom: 1.5rem; }
+  .tab { flex: 1; padding: 9px; border: 1px solid #ddd; border-radius: 10px; background: #fff; font-size: 14px; font-weight: 500; cursor: pointer; color: #888; transition: all 0.15s; }
+  .tab.active { background: #111; color: #fff; border-color: #111; }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .card { background: #fff; border-radius: 14px; border: 1px solid #eee; padding: 1rem 1.25rem; margin-bottom: 12px; }
+
+  label { font-size: 13px; color: #888; display: block; margin-bottom: 6px; }
+  .name-row { display: flex; gap: 8px; }
+  input[type=text] { flex: 1; border: 1px solid #ddd; border-radius: 8px; padding: 9px 12px; font-size: 14px; outline: none; }
+  input[type=text]:focus { border-color: #111; }
+  input[type=number] { width: 60px; text-align: center; font-size: 24px; font-weight: 600; border: 1px solid #ddd; border-radius: 8px; padding: 6px 4px; outline: none; }
+  input[type=number]:focus { border-color: #111; }
+  button { border: 1px solid #ddd; border-radius: 8px; background: #fff; padding: 9px 16px; font-size: 14px; font-weight: 500; cursor: pointer; color: #111; transition: all 0.15s; }
+  button:hover { background: #f5f5f5; }
+  .btn-primary { background: #111; color: #fff; border-color: #111; width: 100%; padding: 13px; font-size: 15px; border-radius: 10px; margin-top: 1rem; }
+  .btn-primary:hover { background: #333; }
+
+  .points-guide { background: #f9f9f9; border-radius: 10px; padding: 10px 14px; margin-bottom: 1rem; font-size: 13px; color: #888; display: flex; gap: 14px; flex-wrap: wrap; }
+
+  .match-header { font-size: 12px; color: #aaa; margin-bottom: 14px; display: flex; justify-content: space-between; }
+  .match-teams { display: flex; align-items: center; gap: 8px; }
+  .team { flex: 1; text-align: center; }
+  .team-flag { font-size: 38px; display: block; margin-bottom: 6px; }
+  .team-name { font-size: 14px; font-weight: 600; color: #111; }
+  .vs-col { text-align: center; min-width: 88px; }
+  .vs { font-size: 12px; color: #bbb; display: block; margin-bottom: 8px; }
+  .score-row { display: flex; align-items: center; justify-content: center; gap: 6px; }
+  .score-sep { font-size: 24px; font-weight: 600; color: #bbb; }
+  .locked-num { width: 60px; text-align: center; font-size: 24px; font-weight: 600; color: #888; background: #f5f5f5; border: 1px solid #eee; border-radius: 8px; padding: 6px 4px; display: inline-block; }
+
+  .badge { font-size: 11px; padding: 3px 9px; border-radius: 6px; font-weight: 500; }
+  .badge-exact { background: #d1fae5; color: #065f46; }
+  .badge-correct { background: #fef3c7; color: #92400e; }
+  .badge-wrong { background: #fee2e2; color: #991b1b; }
+
+  .lb-wrap { background: #fff; border-radius: 14px; border: 1px solid #eee; overflow: hidden; }
+  .lb-head { display: grid; grid-template-columns: 36px 1fr 80px 64px 56px; padding: 9px 16px; font-size: 12px; color: #aaa; border-bottom: 1px solid #f0f0f0; }
+  .lb-row { display: grid; grid-template-columns: 36px 1fr 80px 64px 56px; padding: 12px 16px; font-size: 14px; align-items: center; border-bottom: 1px solid #f0f0f0; }
+  .lb-row:last-child { border-bottom: none; }
+  .lb-row.me { background: #eff6ff; }
+  .lb-rank { font-weight: 600; color: #aaa; }
+  .lb-name { font-weight: 500; color: #111; }
+  .lb-pred { text-align: center; font-size: 13px; color: #666; }
+  .lb-result { text-align: center; }
+  .lb-pts { text-align: right; font-weight: 600; color: #111; }
+
+  .empty { text-align: center; padding: 2.5rem; color: #bbb; font-size: 14px; }
+  .admin-note { background: #f9f9f9; border-radius: 8px; padding: 10px 14px; margin-bottom: 1rem; font-size: 13px; color: #999; }
+
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #111; color: #fff; padding: 9px 22px; border-radius: 10px; font-size: 14px; opacity: 0; transition: opacity 0.3s; pointer-events: none; white-space: nowrap; }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <h1>🏆 2026 월드컵 한국 예측</h1>
+    <p>A조 1경기 · 2026.06.12</p>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab active" onclick="switchTab('predict')">예측하기</button>
+    <button class="tab" onclick="switchTab('leaderboard')">순위표</button>
+    <button class="tab" onclick="switchTab('results')">결과 입력</button>
+  </div>
+
+  <div id="tab-predict" class="section active">
+    <div class="card">
+      <label>참가자 이름</label>
+      <div class="name-row">
+        <input type="text" id="player-name" placeholder="이름을 입력하세요" maxlength="20" />
+        <button onclick="loadPlayer()">불러오기</button>
+      </div>
+    </div>
+
+    <div class="points-guide">
+      <span>🎯 정확한 스코어 = <strong>3점</strong></span>
+      <span>✅ 승패만 맞춤 = <strong>1점</strong></span>
+      <span>❌ 틀림 = 0점</span>
+    </div>
+
+    <div id="match-predict"></div>
+    <button class="btn-primary" onclick="submitPrediction()">예측 제출하기</button>
+  </div>
+
+  <div id="tab-leaderboard" class="section">
+    <div id="leaderboard-container"></div>
+  </div>
+
+  <div id="tab-results" class="section">
+    <div class="admin-note">관리자 전용 — 실제 경기 결과를 입력하면 점수가 자동 계산됩니다.</div>
+    <div id="match-result"></div>
+    <button class="btn-primary" onclick="submitResult()">결과 저장 및 점수 계산</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const MATCH = { id: 'kor_cze', group: 'A조 1경기', date: '2026.06.12', home: { name: '한국', flag: '🇰🇷' }, away: { name: '체코', flag: '🇨🇿' } };
+
+let state = { predictions: {}, result: null, currentUser: '' };
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem('wc2026_korcze');
+    if (saved) state = JSON.parse(saved);
+  } catch(e) {}
+}
+
+function saveState() {
+  try { localStorage.setItem('wc2026_korcze', JSON.stringify(state)); } catch(e) {}
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function renderPredictCard() {
+  const pred = state.predictions[state.currentUser] || {};
+  const result = state.result;
+  const locked = !!result;
+
+  let scoreHtml = '';
+  if (locked) {
+    let badge = '';
+    if (pred.home !== undefined) {
+      const predWin = pred.home > pred.away ? 'H' : pred.home < pred.away ? 'A' : 'D';
+      const realWin = result.home > result.away ? 'H' : result.home < result.away ? 'A' : 'D';
+      if (pred.home === result.home && pred.away === result.away)
+        badge = '<span class="badge badge-exact">정확! +3점</span>';
+      else if (predWin === realWin)
+        badge = '<span class="badge badge-correct">승패 맞춤 +1점</span>';
+      else
+        badge = '<span class="badge badge-wrong">틀림 0점</span>';
+    }
+    scoreHtml = `
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+        <div class="score-row">
+          <div class="locked-num">${result.home}</div>
+          <span class="score-sep">–</span>
+          <div class="locked-num">${result.away}</div>
+        </div>
+        <span style="font-size:11px;color:#bbb;">최종 결과</span>
+        ${pred.home !== undefined
+          ? `<span style="font-size:12px;color:#999;">내 예측: ${pred.home}–${pred.away} &nbsp;${badge}</span>`
+          : '<span style="font-size:12px;color:#bbb;">예측 없음</span>'}
+      </div>`;
+  } else {
+    scoreHtml = `
+      <div class="score-row">
+        <input type="number" min="0" max="20" value="${pred.home ?? ''}" id="pred-h" placeholder="0" />
+        <span class="score-sep">–</span>
+        <input type="number" min="0" max="20" value="${pred.away ?? ''}" id="pred-a" placeholder="0" />
+      </div>`;
+  }
+
+  document.getElementById('match-predict').innerHTML = `
+    <div class="card">
+      <div class="match-header"><span>${MATCH.group}</span><span>${MATCH.date}</span></div>
+      <div class="match-teams">
+        <div class="team"><span class="team-flag">${MATCH.home.flag}</span><span class="team-name">${MATCH.home.name}</span></div>
+        <div class="vs-col"><span class="vs">VS</span>${scoreHtml}</div>
+        <div class="team"><span class="team-flag">${MATCH.away.flag}</span><span class="team-name">${MATCH.away.name}</span></div>
+      </div>
+    </div>`;
+}
+
+function renderResultCard() {
+  const result = state.result;
+  document.getElementById('match-result').innerHTML = `
+    <div class="card">
+      <div class="match-header"><span>${MATCH.group}</span><span>${MATCH.date}</span></div>
+      <div class="match-teams">
+        <div class="team"><span class="team-flag">${MATCH.home.flag}</span><span class="team-name">${MATCH.home.name}</span></div>
+        <div class="vs-col">
+          <span class="vs">실제 결과 입력</span>
+          <div class="score-row">
+            <input type="number" min="0" max="20" value="${result ? result.home : ''}" id="res-h" placeholder="0" />
+            <span class="score-sep">–</span>
+            <input type="number" min="0" max="20" value="${result ? result.away : ''}" id="res-a" placeholder="0" />
+          </div>
+        </div>
+        <div class="team"><span class="team-flag">${MATCH.away.flag}</span><span class="team-name">${MATCH.away.name}</span></div>
+      </div>
+    </div>`;
+}
+
+function calcPoints(name) {
+  const pred = state.predictions[name];
+  const result = state.result;
+  if (!pred || !result) return { pts: 0, label: '–' };
+  const predWin = pred.home > pred.away ? 'H' : pred.home < pred.away ? 'A' : 'D';
+  const realWin = result.home > result.away ? 'H' : result.home < result.away ? 'A' : 'D';
+  if (pred.home === result.home && pred.away === result.away) return { pts: 3, label: '정확' };
+  if (predWin === realWin) return { pts: 1, label: '맞춤' };
+  return { pts: 0, label: '틀림' };
+}
+
+function renderLeaderboard() {
+  const names = Object.keys(state.predictions);
+  if (names.length === 0) {
+    document.getElementById('leaderboard-container').innerHTML = '<div class="empty">아직 예측한 참가자가 없습니다.</div>';
+    return;
+  }
+  const rows = names.map(n => {
+    const pred = state.predictions[n];
+    const { pts, label } = calcPoints(n);
+    return { name: n, pred, pts, label };
+  }).sort((a, b) => b.pts - a.pts);
+
+  const medals = ['🥇','🥈','🥉'];
+  const rowsHtml = rows.map((r, i) => {
+    const predStr = r.pred ? `${r.pred.home}–${r.pred.away}` : '–';
+    const badgeClass = r.label === '정확' ? 'badge-exact' : r.label === '맞춤' ? 'badge-correct' : r.label === '틀림' ? 'badge-wrong' : '';
+    return `
+      <div class="lb-row ${r.name === state.currentUser ? 'me' : ''}">
+        <span class="lb-rank">${medals[i] || i+1}</span>
+        <span class="lb-name">${r.name}${r.name === state.currentUser ? ' (나)' : ''}</span>
+        <span class="lb-pred">${predStr}</span>
+        <span class="lb-result">${state.result && r.pred && r.label !== '–' ? `<span class="badge ${badgeClass}">${r.label}</span>` : '–'}</span>
+        <span class="lb-pts">${state.result ? r.pts + '점' : '–'}</span>
+      </div>`;
+  }).join('');
+
+  document.getElementById('leaderboard-container').innerHTML = `
+    <div class="lb-wrap">
+      <div class="lb-head"><span>#</span><span>이름</span><span style="text-align:center">예측</span><span style="text-align:center">결과</span><span style="text-align:right">점수</span></div>
+      ${rowsHtml}
+    </div>`;
+}
+
+function loadPlayer() {
+  const name = document.getElementById('player-name').value.trim();
+  if (!name) { showToast('이름을 입력해 주세요'); return; }
+  state.currentUser = name;
+  renderPredictCard();
+  showToast(`${name}님 안녕하세요!`);
+}
+
+function submitPrediction() {
+  const name = document.getElementById('player-name').value.trim();
+  if (!name) { showToast('이름을 입력해 주세요'); return; }
+  if (state.result) { showToast('이미 결과가 입력되어 예측을 수정할 수 없습니다'); return; }
+  const hEl = document.getElementById('pred-h');
+  const aEl = document.getElementById('pred-a');
+  if (!hEl || !aEl) return;
+  const h = parseInt(hEl.value), a = parseInt(aEl.value);
+  if (isNaN(h) || isNaN(a)) { showToast('스코어를 입력해 주세요'); return; }
+  state.currentUser = name;
+  state.predictions[name] = { home: h, away: a };
+  saveState();
+  showToast(`${name}님의 예측 ${h}–${a} 저장 완료! 🎉`);
+  renderPredictCard();
+}
+
+function submitResult() {
+  const h = parseInt(document.getElementById('res-h').value);
+  const a = parseInt(document.getElementById('res-a').value);
+  if (isNaN(h) || isNaN(a)) { showToast('결과 스코어를 입력해 주세요'); return; }
+  state.result = { home: h, away: a };
+  saveState();
+  showToast('결과 저장 완료! 점수가 계산됩니다.');
+  renderPredictCard();
+  renderLeaderboard();
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', ['predict','leaderboard','results'][i] === tab));
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(`tab-${tab}`).classList.add('active');
+  if (tab === 'leaderboard') renderLeaderboard();
+  if (tab === 'results') renderResultCard();
+}
+
+loadState();
+renderPredictCard();
+</script>
+</body>
+</html>
